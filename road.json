@@ -1,0 +1,32 @@
+{
+  "A":{
+    "address": {
+      "firstValue":  1,
+      "secondValue": 2
+    },
+    "paths": {
+      "B": ["u", "u", "u", "r"],
+      "C": ["r", "r", "r", "u"]
+    }
+  },
+  "B":{
+    "address": {
+      "firstValue":  1,
+      "secondValue": 2
+    },
+    "paths": {
+      "B": ["u", "u", "u", "r"],
+      "C": ["r", "r", "r", "u"]
+    }
+  },
+  "C":{
+    "address": {
+      "firstValue":  1,
+      "secondValue": 2
+    },
+    "paths": {
+      "B": ["u", "u", "u", "r"],
+      "C": ["r", "r", "r", "u"]
+    }
+  }
+}
