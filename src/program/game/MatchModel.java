@@ -13,20 +13,23 @@ import java.util.ArrayList;
 
 public class MatchModel {
     public static final int
-            MOVEMENT_PER_ROUND = 3,
-            MAX_ROUNDS = 3,
+            MOVEMENT_PER_ROUND = 9,
+            MAX_ROUNDS = 1,
             MAX_BULLETS = 3;
 
     private int
-            actual_movement_count,
-            actual_round_count,
-            actual_bullet_count;
+            actual_movement_count = MOVEMENT_PER_ROUND,
+            actual_round_count = MAX_ROUNDS,
+            actual_bullet_count = MAX_BULLETS;
 
     private final Grid grid = new Grid();
 
     private final ArrayList<Tuple<Cell, Clue>> clues = new ArrayList<>();
 
-    private boolean endgame = false;
+    private boolean
+            endGame = false,
+            startGame= true,
+            bearHit = false;
 
     private final PG
             bear = new Bear(grid),
@@ -36,16 +39,23 @@ public class MatchModel {
         actual_round_count = MAX_ROUNDS;
         actual_bullet_count = MAX_BULLETS;
         actual_movement_count = MOVEMENT_PER_ROUND;
-        endgame = false;
+        endGame = false;
     }
 
     public void request_to_command(Runnable runnable){
-        if(!endgame)
+        if(!endGame)
             runnable.run();
     }
 
     public void decrement_movements(){
-        actual_movement_count--;
+        if(--actual_movement_count == 0){
+            if(!endGame) {
+                if(--actual_round_count > 0){
+                    actual_movement_count = MOVEMENT_PER_ROUND;
+                }else
+                    endGame = true;
+            }
+        }
     }
 
     public void decrement_bullets(){
@@ -68,8 +78,8 @@ public class MatchModel {
         return actual_round_count;
     }
 
-    public boolean isEndgame() {
-        return endgame;
+    public boolean isEndGame() {
+        return endGame;
     }
 
     public void addFootPrintClue(Directions direction){
@@ -82,5 +92,37 @@ public class MatchModel {
 
     public Hunter getHunter(){
         return (Hunter) hunter;
+    }
+
+    public void setStartGame(boolean startGame){
+        this.startGame = startGame;
+    }
+
+    public boolean isStartGame() {
+        return startGame;
+    }
+
+    public Cell getCell(Tuple<Integer, Integer> coordinates){
+        return grid.getCell(coordinates);
+    }
+
+    public boolean isPossibleMove(){
+        return getActual_movement_count() > 0 && enoughBullets();
+    }
+
+    public boolean enoughBullets(){
+        return getActual_bullet_count() > 0;
+    }
+
+    public boolean isBearHit() {
+        return bearHit;
+    }
+
+    public void setBearHit(boolean bearHit) {
+        this.bearHit = bearHit;
+    }
+
+    public boolean checkEndGame(){
+        return bearHit || !enoughBullets() || !isPossibleMove();
     }
 }
